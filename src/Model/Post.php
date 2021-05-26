@@ -45,7 +45,7 @@ class Post extends CollectionItem {
         return $newTags;
     }
 
-    public function excerpt() : string {
+    public function excerpt() : string|HtmlString {
         if (!isset($this->excerpt)) {
             $content = $this->getContent();
             $morePos = strpos($content, '<!--excerpt-->');
