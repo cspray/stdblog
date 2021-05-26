@@ -9,7 +9,7 @@ use RuntimeException;
 
 class Post extends CollectionItem {
 
-    private string|HtmlString $excerpt;
+    private string $excerpt;
 
     public static function fromItem(CollectionItem $item) : Post {
         $post = parent::fromItem($item);
@@ -45,14 +45,14 @@ class Post extends CollectionItem {
         return $newTags;
     }
 
-    public function excerpt() : string|HtmlString {
+    public function excerpt() : string {
         if (!isset($this->excerpt)) {
             $content = $this->getContent();
             $morePos = strpos($content, '<!--excerpt-->');
             if (!$morePos) {
                 $this->excerpt = '';
             } else {
-                $this->excerpt = new HtmlString(trim(substr($content, 0, $morePos)));
+                $this->excerpt = (string) new HtmlString(trim(substr($content, 0, $morePos)));
             }
         }
 
