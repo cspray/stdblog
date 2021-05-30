@@ -45,14 +45,29 @@ class Post extends CollectionItem {
         return $newTags;
     }
 
-    public function excerpt() {
+    public function excerpt(int $length = 500) {
+        // The algorithm for gathering the excerpt was taken from https://github.com/tighten/jigsaw-blog-template
         if (!isset($this->excerpt)) {
-            $content = $this->getContent();
-            $morePos = strpos($content, '<!--excerpt-->');
-            if (!$morePos) {
-                $this->excerpt = '';
+            $content = preg_split('/<!--excerpt-->/m', $this->getContent(), 2);
+            $cleaned = trim(
+                strip_tags(
+                    preg_replace(['/<pre>[\w\W]*?<\/pre>/', '/<h\d>[\w\W]*?<\/h\d>/'], '', $content[0]),
+                    '<code>'
+                )
+            );
+
+            if (count($content) > 1) {
+                $this->excerpt = $cleaned;
             } else {
-                $this->excerpt = new HtmlString(trim(substr($content, 0, $morePos)));
+                $truncated = substr($cleaned, 0, $length);
+
+                if (substr_count($truncated, '<code>') > substr_count($truncated, '</code>')) {
+                    $truncated .= '</code>';
+                }
+
+                $this->excerpt = strlen($cleaned) > $length
+                    ? preg_replace('/\s+?(\S+)?$/', '', $truncated) . '...'
+                    : $cleaned;
             }
         }
 
