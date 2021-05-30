@@ -14,6 +14,10 @@ class Tag {
         return $this->name;
     }
 
+    public function getUrl() : string {
+        return sprintf('/tags/%s', $this->name);
+    }
+
     public function __toString() : string {
         return $this->getName();
     }
