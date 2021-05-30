@@ -9,6 +9,7 @@ class TagLink extends AbstractComponent {
 
     public function __construct(string $name, string $href) {
         $this->name = $name;
+        $this->href = $href;
     }
 
     public function render() {

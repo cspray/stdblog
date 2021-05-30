@@ -15,7 +15,7 @@ class Tag {
     }
 
     public function getUrl() : string {
-        return sprintf('/tags/%s', $this->name);
+        return sprintf('/tags/%s', rawurlencode($this->name));
     }
 
     public function __toString() : string {
