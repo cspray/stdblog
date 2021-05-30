@@ -1,11 +1,10 @@
 <?php declare(strict_types=1);
 
+
 namespace Cspray\StdBlog\Component;
 
-use Illuminate\View\Component;
-use Laminas\Escaper\Escaper;
 
-class SolidGlyph extends AbstractComponent {
+class BrandGlyph extends AbstractComponent {
 
     private string $name;
     private string $class;
@@ -18,7 +17,7 @@ class SolidGlyph extends AbstractComponent {
 
     public function render() {
         return sprintf(
-            '<span class="%s"><i class="fas fa-%s"></i></span>',
+            '<span class="%s"><i class="fab fa-%s"></i></span>',
             $this->escaper->escapeHtmlAttr($this->class),
             $this->escaper->escapeHtmlAttr($this->name)
         );
