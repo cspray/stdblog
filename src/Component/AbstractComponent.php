@@ -7,10 +7,14 @@ use Laminas\Escaper\Escaper;
 
 abstract class AbstractComponent extends Component {
 
-    protected Escaper $escaper;
+    private static Escaper $escaper;
 
-    protected function __construct() {
-        $this->escaper = new Escaper('utf-8');
+    protected static function escaper() : Escaper {
+        if (!isset(self::$escaper)) {
+            self::$escaper = new Escaper('utf-8');
+        }
+
+        return self::$escaper;
     }
 
 }
