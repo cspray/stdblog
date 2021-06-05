@@ -2,21 +2,21 @@
 
 namespace Cspray\StdBlog\Component;
 
-class TagLink extends AbstractComponent {
+class TagLink extends Tag {
 
-    private string $name;
     private string $href;
 
-    public function __construct(string $name, string $href) {
-        $this->name = $name;
+    public function __construct(string $name, string $href, string $class = '') {
+        parent::__construct($name, $class);
         $this->href = $href;
     }
 
     public function render() {
+        $tagHtml = parent::render();
         return sprintf(
-            '<a href="%s"><span class="py-0.5 px-2 border rounded-md text-xs">%s</span></a>',
+            '<a href="%s">%s</a>',
             self::escaper()->escapeHtmlAttr($this->href),
-            self::escaper()->escapeHtml($this->name)
+            $tagHtml
         );
     }
 }
