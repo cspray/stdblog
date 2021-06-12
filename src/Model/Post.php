@@ -2,14 +2,13 @@
 
 namespace Cspray\StdBlog\Model;
 
-use Illuminate\Support\HtmlString;
 use TightenCo\Jigsaw\Collection\Collection;
 use TightenCo\Jigsaw\Collection\CollectionItem;
 use RuntimeException;
 
 class Post extends CollectionItem {
 
-    private $excerpt;
+    private string $excerpt;
 
     public static function fromItem(CollectionItem $item) : Post {
         $post = parent::fromItem($item);
