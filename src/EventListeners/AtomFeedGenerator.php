@@ -31,7 +31,10 @@ class AtomFeedGenerator {
     }
 
     private function generateAtomFeedFile(Jigsaw $jigsaw, AtomFeed $atomFeed) : void {
-        $jigsaw->writeOutputFile('atom.xml', var_export($atomFeed, true));
+        $jigsaw->writeOutputFile(
+            'atom.xml',
+            var_export($atomFeed, true) . $atomFeed->getId()
+        );
     }
 
 }

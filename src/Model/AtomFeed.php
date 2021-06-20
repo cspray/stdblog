@@ -3,23 +3,28 @@
 namespace Cspray\StdBlog\Model;
 
 use ArrayIterator;
-use Exception;
+use Iterator;
 use IteratorAggregate;
 use TightenCo\Jigsaw\Jigsaw;
-use Traversable;
 
 class AtomFeed implements IteratorAggregate {
 
+    private Jigsaw $jigsaw;
     private array $entries = [];
 
     public function __construct(Jigsaw $jigsaw) {
+        $this->jigsaw = $jigsaw;
+    }
+
+    public function getId() : string {
+        return $this->jigsaw->getConfig('atomFeed.id');
     }
 
     public function addEntry(AtomEntry $atomEntry) : void {
-
+        $this->entries[] = $atomEntry;
     }
 
-    public function getIterator() {
+    public function getIterator() : Iterator {
         return new ArrayIterator($this->entries);
     }
 }
