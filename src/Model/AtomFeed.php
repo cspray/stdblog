@@ -20,6 +20,10 @@ class AtomFeed implements IteratorAggregate {
         return $this->jigsaw->getConfig('atomFeed.id');
     }
 
+    public function getTitle() : string {
+        return $this->jigsaw->getConfig('title');
+    }
+
     public function addEntry(AtomEntry $atomEntry) : void {
         $this->entries[] = $atomEntry;
     }

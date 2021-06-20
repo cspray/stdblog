@@ -31,9 +31,12 @@ class AtomFeedGenerator {
     }
 
     private function generateAtomFeedFile(Jigsaw $jigsaw, AtomFeed $atomFeed) : void {
+        $view = $jigsaw->app->get('view');
+        $templatePath = sprintf('%s/feed.blade.php', $this->templatePath);
+
         $jigsaw->writeOutputFile(
             'atom.xml',
-            var_export($atomFeed, true) . $atomFeed->getId()
+            $view->file($templatePath, ['atomFeed' => $atomFeed])
         );
     }
 
