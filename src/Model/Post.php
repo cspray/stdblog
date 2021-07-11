@@ -2,18 +2,34 @@
 
 namespace Cspray\StdBlog\Model;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use TightenCo\Jigsaw\Collection\Collection;
 use TightenCo\Jigsaw\Collection\CollectionItem;
 use RuntimeException;
 
 class Post extends CollectionItem {
 
-    private string $excerpt;
+    private Author $author;
+    private bool $isPublished;
+    private string $summary;
 
-    public static function fromItem(CollectionItem $item) : Post {
+    public static function fromItem(CollectionItem $item, bool $strictSummaryMode = true) : Post {
+        $source = $item->getSource();
+        $summary = $item->summary;
+        if ($strictSummaryMode && empty($summary)) {
+            throw new RuntimeException(sprintf(
+                'The post titled "%s" does not have a summary. Please define a summary in the front matter of all posts.',
+                $item->title
+            ));
+        }
+
         $post = parent::fromItem($item);
-
         $tags = self::convertTagsToModel($post);
+
+        $post->isPublished = strpos($source, '/_posts/draft') === false;
+        $post->summary = $summary;
+        $post->author = new Author($item->author->name);
 
         $post->addVariables([
             'tags' => $tags
@@ -44,33 +60,24 @@ class Post extends CollectionItem {
         return $newTags;
     }
 
-    public function excerpt(int $length = 500) {
-        // The algorithm for gathering the excerpt was taken from https://github.com/tighten/jigsaw-blog-template
-        if (!isset($this->excerpt)) {
-            $content = preg_split('/<!--excerpt-->/m', $this->getContent(), 2);
-            $cleaned = trim(
-                strip_tags(
-                    preg_replace(['/<pre>[\w\W]*?<\/pre>/', '/<h\d>[\w\W]*?<\/h\d>/'], '', $content[0]),
-                    '<code>'
-                )
-            );
-
-            if (count($content) > 1) {
-                $this->excerpt = $cleaned;
-            } else {
-                $truncated = substr($cleaned, 0, $length);
-
-                if (substr_count($truncated, '<code>') > substr_count($truncated, '</code>')) {
-                    $truncated .= '</code>';
-                }
-
-                $this->excerpt = strlen($cleaned) > $length
-                    ? preg_replace('/\s+?(\S+)?$/', '', $truncated) . '...'
-                    : $cleaned;
-            }
+    public function getDate() : DateTimeInterface {
+        if (is_int($this->date)) {
+            return new DateTimeImmutable('@' . $this->date, new \DateTimeZone('America/New_York'));
+        } else {
+            return DateTimeImmutable::createFromFormat('Y-m-d H:i', $this->date, new \DateTimeZone('America/New_York'));
         }
+    }
 
-        return $this->excerpt;
+    public function getHumanFriendlyDate() : string {
+        return $this->getDate()->format('F jS, o');
+    }
+
+    public function getAuthor() : Author {
+        return $this->author;
+    }
+
+    public function getSummary() : string {
+        return $this->summary;
     }
 
     public function isTagged(string $tag) : bool {
@@ -81,5 +88,9 @@ class Post extends CollectionItem {
         }) !== false;
     }
 
+
+    public function isPublished() : bool {
+        return $this->isPublished;
+    }
 
 }
