@@ -63,13 +63,11 @@ class AtomFeedGenerator {
         $generator->setAttributeNode($generatorVersion);
         $generator->nodeValue = 'cspray/stdblog';
 
-        $feed->append(
-            $feedId,
-            $feedTitle,
-            $feedLink,
-            $feedUpdated,
-            $generator
-        );
+        $feed->appendChild($feedId);
+        $feed->appendChild($feedTitle);
+        $feed->appendChild($feedLink);
+        $feed->appendChild($feedUpdated);
+        $feed->appendChild($generator);
 
         /** @var AtomEntry $atomEntry */
         foreach ($atomFeed as $atomEntry) {
@@ -97,15 +95,12 @@ class AtomFeedGenerator {
             $entrySummary = $domDocument->createElement('summary');
             $entrySummary->nodeValue = $atomEntry->getSummary();
 
-            $entry->append(
-                $entryId,
-                $entryTitle,
-                $entryAuthor,
-                $entryLink,
-                $entryUpdated,
-                $entrySummary
-            );
-
+            $entry->appendChild($entryId);
+            $entry->appendChild($entryTitle);
+            $entry->appendChild($entryAuthor);
+            $entry->appendChild($entryLink);
+            $entry->appendChild($entryUpdated);
+            $entry->appendChild($entrySummary);
             $feed->appendChild($entry);
         }
 
