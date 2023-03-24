@@ -37,6 +37,10 @@ class AtomEntry {
         return $this->post->getSummary();
     }
 
+    public function getContent() : string {
+        return $this->post->getContent();
+    }
+
     public function getUrl() : string {
         return sprintf(
             '%s%s',
