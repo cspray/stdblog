@@ -95,12 +95,18 @@ class AtomFeedGenerator {
             $entrySummary = $domDocument->createElement('summary');
             $entrySummary->nodeValue = $atomEntry->getSummary();
 
+            $entryContent = $domDocument->createElement('content');
+            $langAttribute = $domDocument->createAttribute('lang');
+            $langAttribute->value = 'en';
+            $entryContent->setAttributeNode($langAttribute);
+
             $entry->appendChild($entryId);
             $entry->appendChild($entryTitle);
             $entry->appendChild($entryAuthor);
             $entry->appendChild($entryLink);
             $entry->appendChild($entryUpdated);
             $entry->appendChild($entrySummary);
+            $entry->appendChild($entryContent);
             $feed->appendChild($entry);
         }
 
