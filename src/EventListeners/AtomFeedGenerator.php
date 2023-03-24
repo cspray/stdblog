@@ -99,6 +99,7 @@ class AtomFeedGenerator {
             $langAttribute = $domDocument->createAttribute('lang');
             $langAttribute->value = 'en';
             $entryContent->setAttributeNode($langAttribute);
+            $entryContent->nodeValue = $atomEntry->getContent();
 
             $entry->appendChild($entryId);
             $entry->appendChild($entryTitle);
