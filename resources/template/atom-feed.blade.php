@@ -23,7 +23,9 @@
                 <name>{{ $entry->getAuthor()->getName() }}</name>
             </author>
             <content type="xhtml" xml:lang="en">
-                {!! $entry->getContent() !!}
+                <div xmlns="http://www.w3.org/1999/xhtml">
+                    {!! $entry->getContent() !!}
+                </div>
             </content>
         </entry>
     @endforeach
