@@ -12,7 +12,7 @@ class AtomFeedGenerator {
     private string $templatePath;
 
     public function __construct() {
-
+        $this->templatePath = dirname(__DIR__, 2) . '/resources/template/atom-feed.blade.php';
     }
 
     public function handle(Jigsaw $jigsaw) {
