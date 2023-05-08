@@ -38,13 +38,14 @@ class AtomEntry {
     }
 
     public function getContent() : string {
-        return $this->post->getContent();
+        $content = $this->post->getContent();
+        return str_replace('&hellip;', '...', $content);
     }
 
     public function getUrl() : string {
         return sprintf(
             '%s%s',
-            $this->jigsaw->getConfig('atomFeed.url'),
+            $this->jigsaw->getConfig('atomFeed.blogUrl'),
             $this->post->getUrl()
         );
     }
