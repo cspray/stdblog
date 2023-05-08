@@ -3,6 +3,8 @@
 namespace Cspray\StdBlog\EventListeners;
 
 use Cspray\StdBlog\Model\Tag;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use TightenCo\Jigsaw\Console\ConsoleOutput;
 use TightenCo\Jigsaw\Jigsaw;
 
@@ -16,12 +18,16 @@ class TagHomepageGenerator {
         $this->templatePath = dirname(__DIR__, 2) . '/resources/template/layouts/tag-index.template.php';
     }
 
-    public function handle(Jigsaw $jigsaw) {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function handle(Jigsaw $jigsaw) : void {
         /** @var ConsoleOutput $consoleOutput */
         $consoleOutput = $jigsaw->app->get(ConsoleOutput::class);
         $tagIndexContents = file_get_contents($this->templatePath);
         $uniqueTags = $this->gatherUniqueTags($jigsaw);
-        $tagNames = array_map(fn(Tag $tag) => $tag->getName(), $uniqueTags);
+        $tagNames = array_map(static fn(Tag $tag) => $tag->getName(), $uniqueTags);
         $layoutModifiedTime = filemtime($this->templatePath);
 
         $tagTemplates = scandir($jigsaw->getSourcePath() . '/tags');
@@ -31,7 +37,7 @@ class TagHomepageGenerator {
                     continue;
                 }
                 $tag = explode('.', $tagTemplate)[0];
-                if (!in_array($tag, $tagNames)) {
+                if (!in_array($tag, $tagNames, true)) {
                     $consoleOutput->writeln("The tag template $tagTemplate no longer has a corresponding tag and will be removed.");
                     unlink($jigsaw->getSourcePath() . '/tags/' . $tagTemplate);
                 }
@@ -55,7 +61,7 @@ class TagHomepageGenerator {
         $posts = $jigsaw->getCollection('posts');
         $tags = [];
         foreach ($posts as $post) {
-            $tags = array_merge($tags, iterator_to_array($post->tags));
+            $tags = [...$tags, ...iterator_to_array($post->tags)];
         }
 
         return array_unique($tags);

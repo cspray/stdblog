@@ -25,6 +25,14 @@ class AtomFeed implements IteratorAggregate {
         return $this->jigsaw->getConfig('title');
     }
 
+    public function getBlogUrl() : string {
+        return $this->jigsaw->getConfig('atomFeed.blogUrl');
+    }
+
+    public function getFeedUrl() : string {
+        return $this->jigsaw->getConfig('atomFeed.feedUrl');
+    }
+
     public function getUpdated() : string {
         $lastPost = null;
         foreach ($this->jigsaw->getCollection('posts') as $post) {
@@ -38,6 +46,9 @@ class AtomFeed implements IteratorAggregate {
         $this->entries[] = $atomEntry;
     }
 
+    /**
+     * @return Iterator<int, AtomEntry>
+     */
     public function getIterator() : Iterator {
         return new ArrayIterator($this->entries);
     }
