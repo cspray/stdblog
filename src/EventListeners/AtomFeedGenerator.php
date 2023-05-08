@@ -35,9 +35,10 @@ class AtomFeedGenerator {
     }
 
     private function generateAtomFeedFile(Jigsaw $jigsaw, AtomFeed $atomFeed) : void {
+        $xmlHeader = '<?xml version="1.0" encoding="utf-8"?>' . PHP_EOL;
         /** @var Factory $view */
         $view = $jigsaw->app->get('view');
-        $jigsaw->writeOutputFile('feed.atom', $view->file($this->templatePath, ['atomFeed' => $atomFeed]));
+        $jigsaw->writeOutputFile('feed.atom', $xmlHeader . $view->file($this->templatePath, ['atomFeed' => $atomFeed]));
     }
 
 
